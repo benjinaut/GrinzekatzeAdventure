@@ -19,8 +19,6 @@ namespace GrinzeKatzeAdventure
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
-
         }
 
         /// <summary>
@@ -45,9 +43,9 @@ namespace GrinzeKatzeAdventure
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            player = new Player(Content.Load<Texture2D>("mariologo"), new Vector2(100, 100));
-            enemy1 = new Enemy(Content.Load<Texture2D>("penis"), new Vector2(500, 300), 0.3f, player);
 
+            player = new Player(Content.Load<Texture2D>("mariologo"), new Vector2(100, 100));
+           enemy1 = new Enemy(Content.Load<Texture2D>("Penis"), new Vector2(300, 300), 0.3f, player);
             // TODO: use this.Content to load your game content here
         }
 
@@ -70,10 +68,11 @@ namespace GrinzeKatzeAdventure
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
 
             player.Update();
             enemy1.Update();
+
+            // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
@@ -84,3 +83,18 @@ namespace GrinzeKatzeAdventure
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            // TODO: Add your drawing code here
+
+
+            spriteBatch.Begin();
+
+            player.Draw(spriteBatch);
+            enemy1.Draw(spriteBatch);
+
+            spriteBatch.End();
+            base.Draw(gameTime);
+        }
+    }
+}
