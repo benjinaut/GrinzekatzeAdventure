@@ -22,6 +22,10 @@ namespace GrinzeKatzeAdventure
             this.id = id;
 
         }
+        public bool Walkable()
+        {
+            return (id == 0);
+        }
         public void Update(GameTime gameTime)
         {
 
