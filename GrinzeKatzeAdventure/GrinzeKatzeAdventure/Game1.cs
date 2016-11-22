@@ -14,6 +14,7 @@ namespace GrinzeKatzeAdventure
 
         Player player;
         Enemy enemy1;
+        TileMap tilemap;
 
         public Game1()
         {
@@ -30,6 +31,8 @@ namespace GrinzeKatzeAdventure
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
+            tilemap = new TileMap(new Texture2D[] { Content.Load<Texture2D>("grass"), Content.Load<Texture2D>("stone") } , Content.Load<Texture2D>("BitMap"), 32);
 
             base.Initialize();
         }
@@ -68,9 +71,10 @@ namespace GrinzeKatzeAdventure
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-
+            tilemap.Update(gameTime);
             player.Update();
             enemy1.Update();
+
 
             // TODO: Add your update logic here
 
@@ -89,6 +93,8 @@ namespace GrinzeKatzeAdventure
 
 
             spriteBatch.Begin();
+
+            tilemap.Draw(spriteBatch);
 
             player.Draw(spriteBatch);
             enemy1.Draw(spriteBatch);
