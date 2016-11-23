@@ -11,40 +11,68 @@ namespace GrinzeKatzeAdventure
 {
     class Player
     {
-
-        Texture2D texture;
+        float speed;
+        public Texture2D texture;
         public Vector2 position;
+        public Vector2 move;
+        public Vector2 size;
+        float health; 
 
 
 
 
-        public Player(Texture2D playerTexture, Vector2 playerPosition)
+        public Player(Texture2D playerTexture, Vector2 playerPosition, Vector2 pos, float speed, float health)
         {
+            this.speed = speed;
+            this.health = health;
+
             texture = playerTexture;
             position = playerPosition;
 
+            move = Vector2.Zero;
+            size = new Vector2(playerTexture.Width, playerTexture.Height);
+
 
         }
-        public void Update()
+
+        void KeyboardInput()
         {
             KeyboardState key = Keyboard.GetState();
 
+            move = Vector2.Zero;
+
             if (key.IsKeyDown(Keys.Left))
             {
-                position.X -= 1;
+                move.X -= 1;
             }
             if (key.IsKeyDown(Keys.Right))
             {
-                position.X += 1;
+                move.X += 1;
             }
             if (key.IsKeyDown(Keys.Up))
             {
-                position.Y -= 1;
+                move.Y -= 1;
             }
             if (key.IsKeyDown(Keys.Down))
             {
-                position.Y += 1;
+                move.Y += 1;
             }
+
+            position = move;
+        }
+        public void ApplyDamage(float amount)
+        {
+            if (health > amount)
+                health -= amount;
+            else
+            {
+                health = 100;
+                position = new Vector2(100, 100);
+            }
+        }
+        public void Update(GameTime gameTime)
+        {
+            KeyboardInput();
         }
         public void Draw(SpriteBatch spriteBatch)
         {

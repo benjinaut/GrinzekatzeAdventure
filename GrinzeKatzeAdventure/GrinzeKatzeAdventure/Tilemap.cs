@@ -44,7 +44,7 @@ namespace GrinzeKatzeAdventure
             }
         public bool Walkable(Vector2 currentPosition)
         {
-            tilemap[(int)(currentPosition.X / tileSize), (int)(currentPosition.Y / tileSize)].Walkable; //Maps and Collision ---36.57 vid 3
+            return tilemap[(int)(currentPosition.X / tileSize), (int)(currentPosition.Y / tileSize)].Walkable(); 
 
         }
         public void Update(GameTime gameTime)
