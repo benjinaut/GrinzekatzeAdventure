@@ -32,7 +32,7 @@ namespace GrinzeKatzeAdventure
         {
             // TODO: Add your initialization logic here
 
-            tilemap = new TileMap(new Texture2D[] { Content.Load<Texture2D>("grass"), Content.Load<Texture2D>("stone") } , Content.Load<Texture2D>("BitMap"), 32);
+            tilemap = new TileMap(new Texture2D[] { Content.Load<Texture2D>("grass1"), Content.Load<Texture2D>("stone1") } , Content.Load<Texture2D>("bitmap001"), 16);
 
             base.Initialize();
         }
@@ -47,8 +47,8 @@ namespace GrinzeKatzeAdventure
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
 
-            player = new Player(Content.Load<Texture2D>("mariologo"), new Vector2(100, 100));
-           enemy1 = new Enemy(Content.Load<Texture2D>("Penis"), new Vector2(300, 300), 0.3f, player);
+            player = new Player(Content.Load<Texture2D>("player"), new Vector2(100, 100), 0.7f, 100);
+           enemy1 = new Enemy(Content.Load<Texture2D>("reds"), new Vector2(300, 300), 0.3f, player);
             // TODO: use this.Content to load your game content here
         }
 
@@ -72,7 +72,7 @@ namespace GrinzeKatzeAdventure
                 Exit();
 
             tilemap.Update(gameTime);
-            player.Update();
+            player.Update(gameTime, tilemap);
             enemy1.Update();
 
 

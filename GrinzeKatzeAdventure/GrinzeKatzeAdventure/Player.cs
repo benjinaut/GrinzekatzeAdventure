@@ -21,7 +21,7 @@ namespace GrinzeKatzeAdventure
 
 
 
-        public Player(Texture2D playerTexture, Vector2 playerPosition, Vector2 pos, float speed, float health)
+        public Player(Texture2D playerTexture, Vector2 playerPosition, float speed, float health)
         {
             this.speed = speed;
             this.health = health;
@@ -35,7 +35,7 @@ namespace GrinzeKatzeAdventure
 
         }
 
-        void KeyboardInput()
+        void KeyboardInput(TileMap tileMap)
         {
             KeyboardState key = Keyboard.GetState();
 
@@ -58,7 +58,15 @@ namespace GrinzeKatzeAdventure
                 move.Y += 1;
             }
 
-            position = move;
+            if (tileMap.Walkable(position + move)
+                && tileMap.Walkable(position + move + new Vector2(texture.Width,0))
+                && tileMap.Walkable(position + move + new Vector2(0,texture.Height))
+                && tileMap.Walkable(position + move + new Vector2(texture.Width, texture.Height)))
+            {
+                position += move;
+            }
+
+            
         }
         public void ApplyDamage(float amount)
         {
@@ -70,9 +78,9 @@ namespace GrinzeKatzeAdventure
                 position = new Vector2(100, 100);
             }
         }
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, TileMap tileMap)
         {
-            KeyboardInput();
+            KeyboardInput(tileMap);
         }
         public void Draw(SpriteBatch spriteBatch)
         {
