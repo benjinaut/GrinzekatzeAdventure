@@ -16,8 +16,11 @@ namespace GrinzeKatzeAdventure
         public Vector2 position;
         public Vector2 move;
         public Vector2 size;
-        float health; 
-
+        float health;
+        float gForce=0.1f;
+        float speedY;
+        bool jumpOne;
+        bool doubleJump;
 
 
 
@@ -32,6 +35,9 @@ namespace GrinzeKatzeAdventure
             move = Vector2.Zero;
             size = new Vector2(playerTexture.Width, playerTexture.Height);
 
+            jumpOne = false;
+
+
 
         }
 
@@ -39,7 +45,10 @@ namespace GrinzeKatzeAdventure
         {
             KeyboardState key = Keyboard.GetState();
 
-            move = Vector2.Zero;
+            move.Y += gForce;
+            move.X = 0;
+
+
 
             if (key.IsKeyDown(Keys.Left))
             {
@@ -48,16 +57,31 @@ namespace GrinzeKatzeAdventure
             if (key.IsKeyDown(Keys.Right))
             {
                 move.X += 1;
-            }
-            if (key.IsKeyDown(Keys.Up))
-            {
-                move.Y -= 1;
-            }
-            if (key.IsKeyDown(Keys.Down))
-            {
-                move.Y += 1;
+
             }
 
+            if (key.IsKeyDown(Keys.Space)&& !jumpOne)
+            {
+                position.Y -= 1;
+                move.Y = -3;
+            }
+
+            if (position.Y <= 400)
+            {
+                position.Y += move.Y;  
+                jumpOne = true;
+            }
+            else
+            {
+                jumpOne = false; 
+            }
+            position.X += move.X;
+
+
+
+
+            
+            /**
             if (tileMap.Walkable(position + move)
                 && tileMap.Walkable(position + move + new Vector2(texture.Width,0))
                 && tileMap.Walkable(position + move + new Vector2(0,texture.Height))
@@ -65,8 +89,8 @@ namespace GrinzeKatzeAdventure
             {
                 position += move;
             }
+            **/
 
-            
         }
         public void ApplyDamage(float amount)
         {
