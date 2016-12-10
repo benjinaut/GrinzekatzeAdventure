@@ -14,6 +14,9 @@ namespace GrinzeKatzeAdventure
 
         Player player;
         Enemy enemy1;
+        Enemy enemy2;
+        Enemy enemy3;
+        Enemy enemy4;
         TileMap tilemap;
 
         public Game1()
@@ -47,8 +50,12 @@ namespace GrinzeKatzeAdventure
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
 
-            player = new Player(Content.Load<Texture2D>("player"), new Vector2(100, 100), 0.7f, 100);
-           enemy1 = new Enemy(Content.Load<Texture2D>("reds"), new Vector2(300, 300), 0.3f, player);
+           player = new Player(Content.Load<Texture2D>("player"), new Vector2(100, 100), 2.7f, 100);
+           enemy1 = new Enemy(Content.Load<Texture2D>("reds"), new Vector2(300, 300), 0.8f, player);
+           enemy2 = new Enemy(Content.Load<Texture2D>("blues"), new Vector2(100, 300), 0.6f, player);
+           enemy3 = new Enemy(Content.Load<Texture2D>("greys"), new Vector2(200, 300), 0.4f, player);
+           enemy4 = new Enemy(Content.Load<Texture2D>("greens"), new Vector2(400, 300), 0.2f, player);
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -73,8 +80,10 @@ namespace GrinzeKatzeAdventure
 
             tilemap.Update(gameTime);
             player.Update(gameTime, tilemap);
-            enemy1.Update();
-
+            enemy1.Update(tilemap);
+            enemy2.Update(tilemap);
+            enemy3.Update(tilemap);
+            enemy4.Update(tilemap);
 
             // TODO: Add your update logic here
 
@@ -98,7 +107,9 @@ namespace GrinzeKatzeAdventure
 
             player.Draw(spriteBatch);
             enemy1.Draw(spriteBatch);
-
+            enemy2.Draw(spriteBatch);
+            enemy3.Draw(spriteBatch);
+            enemy4.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
         }
