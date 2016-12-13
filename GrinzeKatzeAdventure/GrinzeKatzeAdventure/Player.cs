@@ -60,13 +60,13 @@ namespace GrinzeKatzeAdventure
 
             }
 
-            if (key.IsKeyDown(Keys.Space)&& !jumpOne)
+            if (key.IsKeyDown(Keys.Space)/*&& !jumpOne*/)
             {
                 position.Y -= 1;
-                move.Y = -3;
+                move.Y = -6;
             }
 
-            if (position.Y <= 400)
+            if (tileMap.Walkable(position+ move+ new Vector2(texture.Height,0)))
             {
                 position.Y += move.Y;  
                 jumpOne = true;
@@ -76,20 +76,7 @@ namespace GrinzeKatzeAdventure
                 jumpOne = false; 
             }
             position.X += move.X;
-
-
-
-
             
-            /**
-            if (tileMap.Walkable(position + move)
-                && tileMap.Walkable(position + move + new Vector2(texture.Width,0))
-                && tileMap.Walkable(position + move + new Vector2(0,texture.Height))
-                && tileMap.Walkable(position + move + new Vector2(texture.Width, texture.Height)))
-            {
-                position += move;
-            }
-            **/
 
         }
         public void ApplyDamage(float amount)
