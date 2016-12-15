@@ -39,7 +39,10 @@ namespace GrinzeKatzeAdventure
             Rectangle rectE = new Rectangle(position.ToPoint(), new Point(texture.Width, texture.Height));
             Rectangle rectP = new Rectangle(target.position.ToPoint(), new Point(target.texture.Width, target.texture.Height));
 
-            if (rectE.X<rectP.X + rectP.Size.X && rectE.X + rectE.Size.X > rectP.X && rectE.Y < rectP.Y+ rectP.Size.Y && rectE.Y +rectE.Size.Y> rectP.Y)
+            if (rectE.X<rectP.X + rectP.Size.X 
+                && rectE.X + rectE.Size.X > rectP.X 
+                && rectE.Y < rectP.Y+ rectP.Size.Y 
+                && rectE.Y +rectE.Size.Y> rectP.Y)
             {
                 target.ApplyDamage(100);
             }

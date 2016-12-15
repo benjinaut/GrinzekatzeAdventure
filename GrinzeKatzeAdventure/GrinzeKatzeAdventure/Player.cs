@@ -17,6 +17,7 @@ namespace GrinzeKatzeAdventure
         public Vector2 move;
         public Vector2 size;
         float health;
+        Rectangle wallColider;
         float gForce=0.1f;
         float speedY;
         bool jumpOne;
@@ -28,6 +29,8 @@ namespace GrinzeKatzeAdventure
         {
             this.speed = speed;
             this.health = health;
+
+            wallColider = new Rectangle(playerPosition.ToPoint(), new Point(playerTexture.Width, playerTexture.Height));
 
             texture = playerTexture;
             position = playerPosition;
@@ -66,7 +69,7 @@ namespace GrinzeKatzeAdventure
                 move.Y = -6;
             }
 
-            if (tileMap.Walkable(position+ move+ new Vector2(texture.Height,0)))
+            if (move.Y>=0 &&  !tileMap.Walkable(new Vector2(0, position.Y+move.Y+texture.Height)) )
             {
                 position.Y += move.Y;  
                 jumpOne = true;
