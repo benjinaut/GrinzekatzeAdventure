@@ -11,18 +11,27 @@ namespace GrinzeKatzeAdventure
 {
     class Player
     {
-        float speed;
+        
         public Texture2D texture;
         public Vector2 position;
+
         public Vector2 move;
+        
         public Vector2 size;
+
         float health;
-        Rectangle wallColider;
         float gForce=0.1f;
+        float speed;
+        float jumpMove;
+
         bool jump;
         bool drop;
-        bool wallslide;
-
+        bool wallslideR;
+        bool wallslideL;
+        bool walljumpR;
+        bool walljumpL;
+        bool phaseOne;
+       
 
 
         public Player(Texture2D playerTexture, Vector2 playerPosition, float speed, float health)
@@ -30,18 +39,20 @@ namespace GrinzeKatzeAdventure
             this.speed = speed;
             this.health = health;
 
-            wallColider = new Rectangle(playerPosition.ToPoint(), new Point(playerTexture.Width, playerTexture.Height));
-
             texture = playerTexture;
-            position = playerPosition;
 
+            position = playerPosition;
             move = Vector2.Zero;
+            jumpMove = 0;
             size = new Vector2(playerTexture.Width, playerTexture.Height);
 
             jump = true;
-
-
-
+            drop = false;
+            wallslideL = false;
+            wallslideR = false;
+            walljumpL = false;
+            walljumpR = false;
+            phaseOne = false;
         }
 
         void KeyboardInput()
@@ -51,92 +62,171 @@ namespace GrinzeKatzeAdventure
             move.Y += gForce;
             move.X = 0;
 
-            
 
-            if (key.IsKeyDown(Keys.Left) || key.IsKeyDown(Keys.A))
-            {
-                move.X -= 3;
-            }
-            if (key.IsKeyDown(Keys.Right) || key.IsKeyDown(Keys.D))
-            {
-                move.X += 3;
 
-            }
-            if (key.IsKeyDown(Keys.Down)|| key.IsKeyDown(Keys.S)) //drop
-            {
-                if (move.Y<0 && !drop && !key.IsKeyDown(Keys.Space))
-                {
+            // KEY BLOCK
 
-                    move.Y *= -4;
-                    drop = true;
-
-                }
-            }
-
-            if (key.IsKeyDown(Keys.Space))  //jump
+            if ((key.IsKeyDown(Keys.Left) || key.IsKeyDown(Keys.A)) && !(wallslideR||wallslideL||(phaseOne && walljumpL)))
             {
                 if (!jump)
                 {
-                    move.Y = -7;
-                    jump = true;
+                    move.X -= 2;
                 }
-               
+                move.X -= 3;
+            }
+
+            if ((key.IsKeyDown(Keys.Right) || key.IsKeyDown(Keys.D)) && !(wallslideR || wallslideL || (phaseOne && walljumpR)))
+            {
+                if (!jump)
+                { 
+                    move.X += 2;
+                }
+                move.X += 3;
+            }
+
+            if (key.IsKeyDown(Keys.Down)|| key.IsKeyDown(Keys.S) && move.Y < 0) 
+            {
+                move.Y =2;
+                drop = true;
+                wallslideL = false;
+                wallslideR = false;
+            }
+
+            if (key.IsKeyDown(Keys.Space) && !jump)  
+            {
+                    move.Y = -4;
+                    jump = true;
+
+                if(move.X < 0)
+                {
+                    jumpMove = -2;
+                }
+                if(move.X > 0)
+                {
+                    jumpMove = 2;
+                }
+                if (move.X == 0)
+                {
+                    jumpMove = 0;
+                }
+
+                if (wallslideR)
+                {
+                    wallslideR = false;
+                    walljumpR = true;
+                }
+
+                if (wallslideL)
+                {
+                    wallslideL = false;
+                    walljumpL = true;
+                }
 
             }
+
+            //EXECUTIV BLOCK
+
+            if (walljumpR)
+            {
+                move.X -= 1;
+                if (move.Y < 0)
+                {
+                    phaseOne = true;
+                }
+                else
+                {
+                    phaseOne = false;
+                }
+            }
+
+            if (walljumpL)
+            {
+                move.X += 1;
+                if (move.Y < 0)
+                {
+                    phaseOne = true;
+                }
+                else
+                {
+                    phaseOne = false;
+                }
+            }
+            if (jump)
+            {
+                move.X += jumpMove;
+            }
+
+
+
+            // COLLISON BLOCK
 
             TileMap tileMap = GameStuff.Instance.tilemap;
             if (move.Y>0 && ( !tileMap.Walkable(new Vector2(position.X, position.Y+move.Y+texture.Height))                   
-                || !tileMap.Walkable(new Vector2(position.X+(texture.Width/2) , position.Y + move.Y + texture.Height))      
-                || !tileMap.Walkable(new Vector2(position.X + (texture.Width / 4), position.Y + move.Y + texture.Height))   
-                || !tileMap.Walkable(new Vector2(position.X + ((3*texture.Width) / 4), position.Y + move.Y + texture.Height))
                 || !tileMap.Walkable(new Vector2(position.X+texture.Width , position.Y + move.Y + texture.Height))))
-
-                // abfrage ob bestimmte punkte auf nicht begehbar tiles trefen durch die schwerkraft
-                // also wenn move in y richtung größer als 0 ist
-                // ja ja, ich weis man stellt sich schwerkraft eher als was negatives vor 
-                // is halt so, der dreht das koordinatensystem
-            {
-                
+            { 
                     move.Y = 0;
+
+
+                // DROP POINT
                     jump = false;
                     drop = false;
+                    wallslideL = false;
+                    wallslideR = false;
+                    walljumpL = false;
+                    walljumpR = false;
+                    phaseOne = false;
+
             }
 
              if ((move.Y<0 && (!tileMap.Walkable(new Vector2(position.X, position.Y + move.Y))
-                || !tileMap.Walkable(new Vector2(position.X + (texture.Width / 2), position.Y + move.Y))
-                || !tileMap.Walkable(new Vector2(position.X + (texture.Width / 4), position.Y + move.Y))
-                || !tileMap.Walkable(new Vector2(position.X + ((3 * texture.Width) / 4), position.Y + move.Y))
                 || !tileMap.Walkable(new Vector2(position.X + texture.Width, position.Y + move.Y)))))
-
-                // hier das selbe noch mal in grün 
-                // wenn man im sprung ist soll er nach oben überprüfen 
-                // die punkte sind so gewählt das die pixel zahl zwischen den punkten kleiner ist als die pixel eines tiles
-                // 50/4= 12,5 dazu kommt noch der punkt "null" der start punkt der reihe 
-                // sonst fängt man bei 12
-                // denn scheiss muss man aufteilen weil er sonst jump bei decken klatschern immer wieder false setzt
+                
             {
                 move.Y = 0;
             }
 
             if ((move.X<0 && (!tileMap.Walkable(new Vector2(position.X+move.X, position.Y))
-                || !tileMap.Walkable(new Vector2(position.X + move.X, position.Y+texture.Height))
-                || !tileMap.Walkable(new Vector2(position.X + move.X, position.Y + (texture.Height/2)))))
-
-                // hier wird die kollision mit Wänden ab gefangen
-
+                || !tileMap.Walkable(new Vector2(position.X + move.X, position.Y+texture.Height))))
                 ||( move.X>0 && (!tileMap.Walkable(new Vector2(position.X + move.X+texture.Width , position.Y))
-                || !tileMap.Walkable(new Vector2(position.X + move.X + texture.Width, position.Y+texture.Height))
-                || !tileMap.Walkable(new Vector2(position.X + move.X + texture.Width, position.Y + (texture.Height/2)))))
-                )
+                || !tileMap.Walkable(new Vector2(position.X + move.X + texture.Width, position.Y+texture.Height)))))
             {
-                move.X = 0;
 
+                if (tileMap.Walkable(new Vector2(position.X, 1+position.Y + 3 * texture.Height))
+                    && tileMap.Walkable(new Vector2(position.X, 1+position.Y + 2 * texture.Height))
+                    && tileMap.Walkable(new Vector2(position.X, 1 + position.Y + texture.Height))
+                    && move.X < 0)
+                {
+                    wallslideL = true;
+                    walljumpR = false;
+                    jump = false;
+                }
+
+                if((tileMap.Walkable(new Vector2(position.X+texture.Width, 1 + position.Y + 3 * texture.Height))
+                    && tileMap.Walkable(new Vector2(position.X + texture.Width, 1 + position.Y + 2 * texture.Height))
+                    && tileMap.Walkable(new Vector2(position.X + texture.Width, 1 + position.Y + texture.Height))
+                    && move.X > 0))
+                {
+                    wallslideR = true;
+                    walljumpL = false;
+                    jump = false;
+                }
+
+                move.X = 0;
+            }
+
+            if(move.Y > 0)
+            {
+                jump = true ;
             }
                        
             position += move ;
             
 
         }
+
+
+
+
         public void ApplyDamage(float amount)
         {
             if (health > amount)

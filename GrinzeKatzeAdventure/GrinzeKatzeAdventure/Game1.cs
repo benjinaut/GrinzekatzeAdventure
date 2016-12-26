@@ -35,8 +35,8 @@ namespace GrinzeKatzeAdventure
         {
             // TODO: Add your initialization logic here
 
-            GameStuff.Instance.tilemap = new TileMap(new Texture2D[] { Content.Load<Texture2D>("grass1"), Content.Load<Texture2D>("stone1") } , Content.Load<Texture2D>("bitmap001"), 16);
-            GameStuff.Instance.player = new Player(Content.Load<Texture2D>("player"), new Vector2(450, 100), 2.7f, 100);
+            GameStuff.Instance.tilemap = new TileMap(new Texture2D[] { Content.Load<Texture2D>("fluff"), Content.Load<Texture2D>("night") } , Content.Load<Texture2D>("bitmap002"), 16);
+            GameStuff.Instance.player = new Player(Content.Load<Texture2D>("player"), new Vector2(30, 30), 2.7f, 100);
             GameStuff.Instance.camera = new Camera(GraphicsDevice.Viewport);
             base.Initialize();
         }
